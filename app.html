@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="triplesec-2.0.14-min.js"></script>
+    </head>
+    <body>
+        <div id="encrypt">
+            <h1>Versleutel</h1>
+            <div>
+                Naam: <input type="text" class="name">
+            </div>
+            <div>
+                Geheime tekst: <input type="textarea" class="content">
+            </div>
+            <div>
+                Wachtwoord: <input type="text" class="password">
+            </div>
+            
+            <div>
+                <a href="#" onClick="encrypt()">Versleutel</a>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div id="decrypt">
+            <h1>Ontsleutel</h1>
+            <div>
+                Naam: <input type="text" class="name">
+            </div>
+            <div>
+                Versleutelde tekst: <input type="textarea" class="content">
+            </div>
+            <div>
+                Wachtwoord: <input type="text" class="password">
+            </div>
+            
+            <div>
+                <a href="#" onClick="decrypt()">Ontsleutel</a>
+            </div>
+        </div>
+        
+        <script>
+            function encrypt() {
+                triplesec.encrypt({
+                    data: new triplesec.Buffer($('#encrypt .content').val()),
+                    key: new triplesec.Buffer($('#encrypt .name').val() + $('#encrypt .password').val()),
+                    progress_hook: function (obj) {}
+                }, function(err, buff) {
+                    if (!err) {
+                        $('#decrypt .content').val(buff.toString('hex'))
+                    }
+                });
+            }
+            
+            function decrypt() {
+                triplesec.encrypt({
+                    data: new triplesec.Buffer($('#decrypt .content').val(), 'hex'),
+                    key: new triplesec.Buffer($('#decrypt .name').val() + $('#decrypt .password').val()),
+                    progress_hook: function (obj) {}
+                }, function(err, buff) {
+                    if (!err) {
+                        $('#encrypt .content').val(buff.toString())
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
